@@ -28,6 +28,7 @@ app.use(
 app.use(parameter(app))
 app.use(router.routes()).use(router.allowedMethods())
 
+// 处理错误
 app.on('error', errHandler)
 
 module.exports = app

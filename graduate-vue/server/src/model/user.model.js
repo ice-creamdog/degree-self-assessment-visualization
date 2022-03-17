@@ -19,6 +19,19 @@ const User = seq.define('school_user', {
     allowNull: false,
     defaultValue: 0,
     comment: '是否为管理员，默认不是（0），1：是管理员'
+  },
+  token: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+    comment: 'token'
+  },
+  createdAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
+  },
+  updatedAt: {
+    type: DataTypes.DATE,
+    defaultValue: DataTypes.NOW
   }
 })
 

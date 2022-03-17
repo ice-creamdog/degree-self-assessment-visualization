@@ -1,5 +1,8 @@
 const bcrypt = require('bcryptjs')
 
+const jwt = require('jsonwebtoken')
+const { JWT_SECRET } = require('../config/config.default')
+
 const {
   userFormatError,
   userAlreadyExited,
@@ -8,6 +11,7 @@ const {
   invalidPassword,
   userLoginError
 } = require('../constant/err.type')
+const User = require('../model/user.model')
 const { getUserInfo } = require('../service/user.service')
 const userValidator = async (ctx, next) => {
   const { user_name, password } = ctx.request.body
@@ -71,9 +75,43 @@ const verifyLogin = async (ctx, next) => {
   await next()
 }
 
+// token校验
+const tokenCheck = async (ctx, next) => {
+  const token = ctx.headers.token
+  if (!token) {
+    ctx.body = {
+      status: 403,
+      msg: 'token不能为空'
+    }
+  }
+  const result = jwt.verify(token, JWT_SECRET)
+
+  if (result == 'err' || !result) {
+    ctx.body = {
+      status: 403,
+      message: '登录过期，请重新登录'
+    }
+    return false
+  } else {
+    const res = await User.findOne({
+      where: { id: Number(result) }
+    })
+
+    if (res.token !== token || !res.token) {
+      ctx.body = {
+        status: 403,
+        message: '登录已过期，请重新登录'
+      }
+      return false
+    }
+  }
+  await next()
+}
+
 module.exports = {
   userValidator,
   verifyUser,
   verifyLogin,
-  crpytPassword
+  crpytPassword,
+  tokenCheck
 }

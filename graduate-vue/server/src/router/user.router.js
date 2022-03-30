@@ -4,7 +4,8 @@ const {
   userValidator,
   verifyUser,
   verifyLogin,
-  crpytPassword
+  crpytPassword,
+  tokenCheck
 } = require('../middleware/user.middleware')
 
 const { register, login, changePassword, logout } = require('../controller/user.controller')
@@ -17,8 +18,8 @@ router.post('/register', userValidator, verifyUser, crpytPassword, register)
 
 router.post('/login', userValidator, verifyLogin, login)
 
-router.patch('/', crpytPassword, changePassword)
+router.patch('/', crpytPassword, tokenCheck, changePassword)
 
-router.post('/logout', logout)
+router.post('/logout', tokenCheck, logout)
 
 module.exports = router

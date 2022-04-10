@@ -4,6 +4,10 @@
     "module": "esnext",
     "moduleResolution": "node",
     // "types": ["element-plus/global"]
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [ "src/*" ],
+    }
   },
   "include": ["vite.config.ts"]
 }

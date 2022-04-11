@@ -12,8 +12,11 @@
   </div>
 </template>
 
-<script lang="ts" setup>
+<script>
 import Aside from '../components/Aside/index.vue'
+export default {
+  components: { Aside }
+}
 </script>
 
 <style lang="scss" scoped>

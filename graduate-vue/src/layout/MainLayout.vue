@@ -5,7 +5,13 @@
       <el-container>
         <el-aside width="200px"><Aside></Aside></el-aside>
         <el-main>
-          <router-view />
+          <router-view v-slot="{ Component, route }">
+            <transition name="fade-transform" mode="out-in">
+              <keep-alive :max="10">
+                <component :is="Component" :key="route.path" />
+              </keep-alive>
+            </transition>
+          </router-view>
         </el-main>
       </el-container>
     </el-container>

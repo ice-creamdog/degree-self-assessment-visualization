@@ -1,16 +1,15 @@
 import axios from 'axios'
-import { showMessage } from './status'
+import { showMessage } from '@/status'
 import { ElMessage } from 'element-plus'
-import { getToken } from '@/api/app'
 
 const service = axios.create({
-  baseURL: '/api',
-  timeout: 2000
+  // baseURL: 'api',
+  timeout: 1000
 })
 
 service.interceptors.request.use(
   function (config) {
-    const token = getToken()
+    const token = localStorage.getItem('token')
     if (token !== undefined) {
       config.headers['Authorization'] = token
       // config.headers['Content-type'] = 'application/json;charset=UTF-8'

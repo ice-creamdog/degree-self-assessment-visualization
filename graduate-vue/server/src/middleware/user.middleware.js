@@ -56,6 +56,7 @@ const verifyLogin = async (ctx, next) => {
 
   try {
     const res = await getUserInfo({ user_name })
+    console.log(password, '==', res.password)
     // 用户是否存在
     if (!res) {
       console.error('用户名不存在', { user_name })
@@ -70,6 +71,8 @@ const verifyLogin = async (ctx, next) => {
     }
   } catch (err) {
     console.error(err)
+    const salt = bcrypt.genSaltSync(10)
+    console.log(bcrypt.hashSync(password, salt))
     return ctx.app.emit('error', userLoginError, ctx)
   }
   await next()

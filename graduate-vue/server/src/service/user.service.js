@@ -22,9 +22,9 @@ class UserService {
   }
   // 更新用户信息
   async updateById({ id, user_name, password, is_admin, token }) {
-    const whereOpt = { id }
+    const whereOpt = {}
     const newUser = {}
-
+    id && Object.assign(whereOpt, { id })
     user_name && Object.assign(newUser, { user_name })
     password && Object.assign(newUser, { password })
     is_admin && Object.assign(newUser, { is_admin })

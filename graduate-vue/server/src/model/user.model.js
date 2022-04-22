@@ -34,5 +34,5 @@ const User = seq.define('school_user', {
     defaultValue: DataTypes.NOW
   }
 })
-
+// User.sync({ force: true })
 module.exports = User

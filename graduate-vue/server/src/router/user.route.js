@@ -11,7 +11,7 @@ const {
 const { register, login, changePassword, logout } = require('../controller/user.controller')
 
 const router = new Router({
-  prefix: '/users'
+  prefix: '/user'
 })
 
 router.post('/register', userValidator, verifyUser, crpytPassword, register)

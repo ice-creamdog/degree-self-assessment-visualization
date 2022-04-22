@@ -8,21 +8,17 @@ const parameter = require('koa-parameter')
 // const errHandler = require('./errHandler')
 const router = require('../router')
 
-
-
-
-
 const app = new Koa()
 
 app.use(
-    KoaBody({
-        multipart: true,
-        formidable: {
-            // uploadDir: path.join(__dirname, '../upload')
-            keepExtensions: true
-        },
-        parsedMethods: ['POST', 'PUT', 'PATCH', 'DELETE'],
-    })
+  KoaBody({
+    multipart: true,
+    formidable: {
+      // uploadDir: path.join(__dirname, '../upload')
+      keepExtensions: true
+    },
+    parsedMethods: ['POST', 'PUT', 'PATCH', 'DELETE']
+  })
 )
 // app.use(KoaStatic(path.join(__dirname, '../upload')))
 app.use(parameter(app))

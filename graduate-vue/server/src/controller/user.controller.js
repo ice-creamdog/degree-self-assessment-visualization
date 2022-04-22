@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken')
 
 const { JWT_SECRET } = require('../config/config.default')
 
-const { getUserInfo, createUser, updateById } = require('../service/user.service')
+const { getUserInfo, createUser, updateById, deleteToken } = require('../service/user.service')
 const { userRegisterError, userLoginError, userLogOutError } = require('../constant/err.type')
 class UserController {
   // 注册
@@ -33,14 +33,18 @@ class UserController {
       let token
       if (res) {
         token = jwt.sign(res, JWT_SECRET, { expiresIn: '1d' })
-        const { id } = { res }
+        // console.log(typeof token === 'string')
+        const { id } = res
+        // console.log(id)
         const updateToke = await updateById({ id, token })
+        console.log(updateToke)
         if (updateToke) {
           ctx.body = {
             code: 0,
             message: '用户登录成功',
             result: {
-              token: token
+              token: token,
+              id: id
             }
           }
         }
@@ -79,17 +83,21 @@ class UserController {
   async logout(ctx) {
     // 验证token
     try {
-      const token = { token: '' }
-      const updateToken = await updateById({ id, token })
-      if (updateToken) {
+      const { id } = ctx.request.body
+      console.log(id, '+++')
+      const deleteToke = await deleteToken({ id })
+      if (deleteToke) {
+        console.log(111)
         ctx.body = {
           code: 0,
           message: '用户登出成功',
           result: ''
         }
       }
+      console.log(ctx.status)
     } catch (error) {
       console.error('用户登出失败', error)
+      // console.log(ctx.status)
       ctx.app.emit('error', userLogOutError, ctx)
     }
     // 注销token

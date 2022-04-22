@@ -11,7 +11,7 @@ service.interceptors.request.use(
   function (config) {
     const token = localStorage.getItem('token')
     if (token !== undefined) {
-      config.headers['Authorization'] = token
+      config.headers['token'] = token
       // config.headers['Content-type'] = 'application/json;charset=UTF-8'
       return config
     }

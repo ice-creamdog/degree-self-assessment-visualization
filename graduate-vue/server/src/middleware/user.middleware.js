@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs')
+const { log } = require('console')
 
 const jwt = require('jsonwebtoken')
 const { JWT_SECRET } = require('../config/config.default')
@@ -88,19 +89,20 @@ const tokenCheck = async (ctx, next) => {
     }
   }
   const result = jwt.verify(token, JWT_SECRET)
-
-  if (result == 'err' || !result) {
+  console.log(result)
+  if (!result) {
     ctx.body = {
       status: 403,
       message: '登录过期，请重新登录'
     }
     return false
   } else {
-    const res = await User.findOne({
-      where: { id: Number(result) }
+    const { dataValues } = await User.findOne({
+      where: { id: Number(result.id) }
     })
-
-    if (res.token !== token || !res.token) {
+    console.log(dataValues.token)
+    console.log(token)
+    if (dataValues.token !== token || !dataValues.token) {
       ctx.body = {
         status: 403,
         message: '登录已过期，请重新登录'

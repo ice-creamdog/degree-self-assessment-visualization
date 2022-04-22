@@ -13,21 +13,34 @@
 
       <el-form-item>
         <el-button type="primary" @click="onSubmit">修改密码</el-button>
-        <el-button>登出</el-button>
+        <el-button @click="handleLogout">登出</el-button>
       </el-form-item>
     </el-form>
   </div>
 </template>
 
-<script lang="ts" setup>
+<script setup>
 import { reactive } from 'vue'
-
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 // do not use same name with ref
 const form = reactive({
   name: '',
   unit: '',
   college: ''
 })
+const store = useStore()
+const router = useRouter()
+const handleLogout = async () => {
+  try {
+    const res = await store.dispatch('user/logout', { id: localStorage.getItem('userId') })
+    if (res) {
+      router.push('/login')
+    }
+  } catch (err) {
+    console.error(err)
+  }
+}
 
 const onSubmit = () => {
   console.log('submit!')

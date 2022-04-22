@@ -29,9 +29,14 @@ class UserService {
     password && Object.assign(newUser, { password })
     is_admin && Object.assign(newUser, { is_admin })
     token && Object.assign(newUser, { token })
-
     const res = await User.update(newUser, { where: whereOpt })
-    // console.log(res)
+    return res[0] > 0 ? true : false
+  }
+
+  async deleteToken({ id }) {
+    const whereOpt = {}
+    id && Object.assign(whereOpt, { id })
+    const res = await User.update({ token: '' }, { where: whereOpt })
     return res[0] > 0 ? true : false
   }
 }

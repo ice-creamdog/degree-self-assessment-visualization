@@ -1,12 +1,14 @@
 // import { InjectionKey } from 'vue'
 import { createStore } from 'vuex'
 import user from '@/store/modules/user'
+import projectEdit from '@/store/modules/projectEdit'
 // import { RootState, AllStateTypes } from './types'
 
 export default createStore({
   namespaced: true,
   modules: {
-    user
+    user,
+    projectEdit
   }
 })
 

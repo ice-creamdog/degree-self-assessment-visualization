@@ -8,7 +8,7 @@
           <router-view v-slot="{ Component, route }">
             <transition name="fade-transform" mode="out-in">
               <keep-alive :max="10">
-                <component :is="Component" :key="route.path" />
+                <component class="component" :is="Component" :key="route.path" />
               </keep-alive>
             </transition>
           </router-view>
@@ -28,9 +28,11 @@ export default {
 <style lang="scss" scoped>
 .common-layout {
   height: 100%;
+  overflow: hidden;
 }
 .el-container {
   height: 100%;
+  overflow: hidden;
 }
 .common-layout .el-header {
   background-color: #b3c0d1;
@@ -44,6 +46,9 @@ export default {
 }
 .el-main {
   overflow: hidden;
+  height: 100%;
+}
+.component {
   height: 100%;
 }
 </style>

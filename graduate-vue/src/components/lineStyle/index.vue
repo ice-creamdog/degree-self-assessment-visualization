@@ -1,7 +1,7 @@
 <template>
   <div class="line-style-setting">
     <el-collapse v-model="activeName" accordion>
-      <el-collapse-item name="1">
+      <el-collapse-item :title="title">
         <div>
           <el-form v-model="lineStyle" size="small">
             <el-form-item label="color">
@@ -57,21 +57,53 @@
 </template>
 
 <script setup>
-import { reactive } from 'vue'
-
+import { reactive, defineEmits, watch, defineProps } from 'vue'
+import { difference } from '@/utils/commonFun.js'
 const lineStyle = reactive({
-  color: '',
-  borderColor: '',
-  width: '',
-  type: 'solid',
-  opacity: 0,
-  cap: 'butt',
-  join: 'bevel',
+  color: null,
+  borderColor: null,
+  width: 0,
+  type: '',
+  opacity: 1,
+  cap: '',
+  join: '',
   shadowBlur: 0,
-  shadowColor: '',
+  shadowColor: null,
   shadowXOffset: 0,
   shadowYOffset: 0
 })
+
+const baseLineStyle = {
+  color: null,
+  borderColor: null,
+  width: 0,
+  type: '',
+  opacity: 1,
+  cap: '',
+  join: '',
+  shadowBlur: 0,
+  shadowColor: null,
+  shadowXOffset: 0,
+  shadowYOffset: 0
+}
+
+const emit = defineEmits('getLineStyle')
+const props = defineProps({
+  title: {
+    type: String
+  }
+})
+const { title } = props
+
+watch(
+  lineStyle,
+  (newValue) => {
+    const diffLineStyle = difference(newValue, baseLineStyle)
+    console.log(diffLineStyle)
+    emit('getLineStyle', diffLineStyle)
+  },
+  { deep: true }
+)
 </script>
 
 <style></style>

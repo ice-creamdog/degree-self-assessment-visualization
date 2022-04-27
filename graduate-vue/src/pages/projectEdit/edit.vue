@@ -17,13 +17,10 @@
           </el-tree>
         </div>
       </el-col>
-      <el-col :span="12">
-        <el-card class="box-card">
-          <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div>
-        </el-card>
-        <el-card class="box-card">
-          <div v-for="o in 4" :key="o" class="text item">{{ 'List item ' + o }}</div>
-        </el-card>
+      <el-col :span="12" class="show">
+        <echart-container class="echarts-show" :options="options" />
+        <!-- {{ options }} -->
+        <div class="data-show"></div>
       </el-col>
       <el-col :span="7" class="setting-col">
         <el-scrollbar>
@@ -50,14 +47,15 @@
     </el-row>
     <el-row :gutter="20" class="show">
       <el-col :span="6" class="resource-data"></el-col>
-      <el-col :span="12" class="pre-show"></el-col>
     </el-row>
   </div>
 </template>
 
 <script setup>
-import { ref, reactive } from 'vue'
+import { ref, reactive, onMounted, watch, computed, toRefs } from 'vue'
 import EchartSetting from '@/components/Echart-setting/index.vue'
+import EchartContainer from 'coms/Echarts-container/index.vue'
+import { useStore } from 'vuex'
 
 let id = 1000
 
@@ -140,6 +138,26 @@ const onSubmit = () => {
 
 const dialogTableVisible = ref(false)
 
+const store = useStore()
+let options = reactive({})
+options = store.getters['echartsOptions/getOptions']
+
+watch(
+  options,
+  (newValue) => {
+    options = newValue
+    console.log(options)
+  },
+
+  { deep: true }
+)
+
+onMounted(() => {
+  options = store.getters['echartsOptions/getOptions']
+  console.log(options)
+})
+// 操作options数据
+
 // 获取项目详细，分别展示
 // 点击数据模块，选择ECharts模型，配置模型样式，提交请求，获取项目详细
 // 发送请求，每一个数据对象，发送userId，projectId，第几块模块，第几个数据对象，对应的ECharts模型描述
@@ -184,5 +202,16 @@ const dialogTableVisible = ref(false)
 
 .setting-col {
   height: 100%;
+}
+.show {
+}
+.echarts-show {
+  width: 100%;
+  height: 65%;
+}
+.data-show {
+  width: 100%;
+  height: 30%;
+  background-color: aqua;
 }
 </style>

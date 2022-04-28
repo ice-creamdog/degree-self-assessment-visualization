@@ -1,7 +1,6 @@
 <template>
   <div class="echarts-container">
     <div class="container" ref="container"></div>
-    {{ options }}
   </div>
 </template>
 

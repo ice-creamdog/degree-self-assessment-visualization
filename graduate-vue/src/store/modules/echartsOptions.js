@@ -73,7 +73,8 @@ const state = () => {
       //     ]
       //   }
       // ]
-    }
+    },
+    dataShow: {}
     // options: localStorage.getItem('currentOptions') || {}
   }
 }
@@ -81,6 +82,9 @@ const state = () => {
 const getters = {
   getOptions(state) {
     return state.options
+  },
+  getDataShow(state) {
+    return state.dataShow
   }
 }
 
@@ -94,6 +98,13 @@ const mutations = {
     const { key, ...values } = data
     const { newValue } = values
     state.options[key] = newValue
+  },
+
+  setDataShow(state, data) {
+    state.dataShow = data
+  },
+  setOptionsAll(state, data) {
+    state.options = data
   }
 }
 

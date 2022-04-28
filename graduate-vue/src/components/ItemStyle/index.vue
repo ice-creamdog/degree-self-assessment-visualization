@@ -9,6 +9,9 @@
           <el-form-item label="borderColor">
             <el-color-picker v-model="itemStyle.borderColor" show-alpha></el-color-picker>
           </el-form-item>
+          <el-form-item label="borderRadius">
+            <el-input-number v-model="itemStyle.borderRadius" show-alpha></el-input-number>
+          </el-form-item>
           <el-form-item label="borderWidth">
             <el-input-number v-model="itemStyle.borderWidth" />
           </el-form-item>
@@ -42,18 +45,31 @@
 
 <script setup>
 import { reactive, watch, defineEmits, defineProps, toRefs } from 'vue-demi'
-
+import { difference } from '@/utils/commonFun.js'
 const itemStyle = reactive({
-  color: '',
-  borderColor: '',
+  color: null,
+  borderColor: null,
   borderWidth: '',
+  borderRadius: 0,
   borderType: 'solid',
   shadowBlur: 0,
-  shadowColor: '',
+  shadowColor: null,
   shadowXOffset: 0,
   shadowYOffset: 0,
   opacity: 1
 })
+const baseItemStyle = {
+  color: null,
+  borderColor: null,
+  borderWidth: '',
+  borderRadius: 0,
+  borderType: 'solid',
+  shadowBlur: 0,
+  shadowColor: null,
+  shadowXOffset: 0,
+  shadowYOffset: 0,
+  opacity: 1
+}
 
 const emit = defineEmits('getItemStyle')
 const props = defineProps({
@@ -70,8 +86,9 @@ const { index, isModules } = toRefs(props)
 watch(
   itemStyle,
   (newValue) => {
+    const diffItemStyle = difference(newValue, baseItemStyle)
     if (isModules) {
-      emit('getItemStyle', { index, newValue })
+      emit('getItemStyle', { index, newValue: diffItemStyle })
     }
   },
   { deep: true }

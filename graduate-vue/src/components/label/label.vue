@@ -103,13 +103,13 @@
 
 <script setup>
 import { reactive, watch, defineEmits, defineProps, toRefs } from 'vue'
-
+import { difference } from '@/utils/commonFun.js'
 const label = reactive({
   show: false,
   position: '',
   color: '',
-  fontStyle: 'normal',
-  fontWeight: 'normal',
+  fontStyle: '',
+  fontWeight: '',
   fontSize: 14,
   align: '',
   verticalAlign: '',
@@ -117,15 +117,37 @@ const label = reactive({
   borderColor: '',
   borderWidth: 0,
   borderRadius: 0,
-  borderType: 'solid',
+  borderType: '',
   width: 0,
   height: 0,
   padding: 0,
   opacity: 0,
   textBorderColor: '',
-  textBorderType: 'solid',
+  textBorderType: '',
   textBorderWidth: 0
 })
+const baseLabel = {
+  show: false,
+  position: '',
+  color: '',
+  fontStyle: '',
+  fontWeight: '',
+  fontSize: 14,
+  align: '',
+  verticalAlign: '',
+  backgroundColor: '',
+  borderColor: '',
+  borderWidth: 0,
+  borderRadius: 0,
+  borderType: '',
+  width: 0,
+  height: 0,
+  padding: 0,
+  opacity: 0,
+  textBorderColor: '',
+  textBorderType: '',
+  textBorderWidth: 0
+}
 
 const emit = defineEmits('getLabelData')
 const props = defineProps({
@@ -142,8 +164,9 @@ const { index, isModules } = toRefs(props)
 watch(
   label,
   (newValue) => {
+    const diffLabel = difference(newValue, baseLabel)
     if (isModules) {
-      emit('getLabelData', { index, newValue })
+      emit('getLabelData', { index, newValue: diffLabel })
     }
   },
   { deep: true }

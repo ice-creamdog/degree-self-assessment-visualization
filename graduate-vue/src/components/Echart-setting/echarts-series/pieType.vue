@@ -21,15 +21,23 @@
         <el-input-number :step="1" v-model="pieType.radius[0]" />
         <el-input-number :step="1" v-model="pieType.radius[1]" />
       </el-form-item>
-      <el-form-item label="data is array">
-        <el-switch v-model="isArray" />
-      </el-form-item>
-      <el-form-item label="data" v-if="isArray">
-        <el-input v-model="pieType.data" placeholder="请复制数据粘贴"></el-input>
-      </el-form-item>
-      <el-form-item v-else>
-        <el-input v-model="dataModel.value" placeholder="value"></el-input>
-        <el-input v-model="dataModel.name" placeholder="name"></el-input>
+      <el-form-item label="data">
+        <div>
+          <el-button @click="handleAddDataObject">添加数据块</el-button>
+        </div>
+        <div v-for="(item, indexData) in pieType.data" :key="indexData">
+          <el-button class="block" @click="handleDeleteDataObject(indexData)"></el-button>
+          <el-input-number
+            class="block"
+            v-model="pieType.data[indexData].value"
+            placeholder="value"
+          ></el-input-number>
+          <el-input
+            class="block"
+            v-model="pieType.data[indexData].name"
+            placeholder="name"
+          ></el-input>
+        </div>
       </el-form-item>
     </el-form>
   </div>
@@ -37,19 +45,26 @@
 
 <script setup>
 import { reactive, ref, watch, defineEmits, defineProps, toRefs } from 'vue'
-
+import { difference } from '@/utils/commonFun.js'
 const pieType = reactive({
   top: 0,
   left: 0,
   width: 0,
   height: 0,
-  center: [0.5, 0.5],
-  radius: [0.5, 0.7],
-  data: []
+  center: [0, 0],
+  radius: [0, 0],
+  data: [{ value: 0, name: '' }]
 })
 
-const isArray = ref(true)
-const dataModel = reactive({})
+const basePieType = {
+  top: 0,
+  left: 0,
+  width: 0,
+  height: 0,
+  center: [0, 0],
+  radius: [0, 0],
+  data: [{ value: 0, name: '' }]
+}
 
 const emit = defineEmits('getPieTypeData')
 const props = defineProps({
@@ -58,13 +73,27 @@ const props = defineProps({
   }
 })
 const { index } = toRefs(props)
+
+const handleAddDataObject = () => {
+  pieType.data.push({ value: 0, name: '' })
+}
+
+const handleDeleteDataObject = (val) => {
+  if (val > 0) pieType.data.splice(val, 1)
+}
+
 watch(
   pieType,
   (newValue) => {
-    emit('getPieTypeData', { index, newValue })
+    const diffPieType = difference(newValue, basePieType)
+    emit('getPieTypeData', { index, newValue: diffPieType })
   },
   { deep: true }
 )
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+.block {
+  display: inline-block;
+}
+</style>

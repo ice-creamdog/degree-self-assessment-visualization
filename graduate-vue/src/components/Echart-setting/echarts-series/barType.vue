@@ -56,11 +56,27 @@
         <el-switch v-model="isArray" />
       </el-form-item>
       <el-form-item label="data" v-if="isArray">
-        <el-input v-model="barType.data" placeholder="请复制数据粘贴"></el-input>
+        <el-input
+          v-model="barType.data"
+          placeholder="请复制数据粘贴"
+          @change="handleDataToArray"
+        ></el-input>
       </el-form-item>
       <el-form-item v-else>
-        <el-input v-model="dataModel.value" placeholder="value"></el-input>
-        <el-input v-model="dataModel.name" placeholder="name"></el-input>
+        <el-button @click="handleAddDataObject">添加数据项</el-button>
+        <div v-for="(item, indexModel) in dataModel" :key="indexModel">
+          <el-button @click="handleDeleteDataObject(indexModel)">删除该项</el-button>
+          <label for="value">value</label>
+          <el-input-number
+            id="value"
+            v-model="dataModel[indexModel].value"
+            placeholder="value"
+          ></el-input-number>
+          <label for="name">name</label>
+          <el-input id="name" v-model="dataModel[indexModel].name" placeholder="name">
+            name
+          </el-input>
+        </div>
       </el-form-item>
     </el-form>
   </div>
@@ -68,7 +84,8 @@
 
 <script setup>
 import { reactive, ref, watch, defineEmits, defineProps, toRefs } from 'vue'
-
+import { ElMessage } from 'element-plus'
+import { difference } from '@/utils/commonFun.js'
 const barType = reactive({
   showBackgroundColor: false,
   backgroundColorStyle: {
@@ -82,8 +99,25 @@ const barType = reactive({
     shadowYOffset: 0,
     opacity: 1
   },
-  data: []
+  data: ''
 })
+const baseBarType = {
+  showBackgroundColor: false,
+  backgroundColorStyle: {
+    color: '',
+    borderColor: '',
+    borderWidth: '',
+    borderType: 'solid',
+    shadowBlur: 0,
+    shadowColor: '',
+    shadowXOffset: 0,
+    shadowYOffset: 0,
+    opacity: 1
+  },
+  data: ''
+}
+const isArray = ref(true)
+const dataModel = reactive([{ value: 0, name: '' }])
 
 const emit = defineEmits('getBarTypeData')
 const props = defineProps({
@@ -92,16 +126,45 @@ const props = defineProps({
   }
 })
 const { index } = toRefs(props)
+
+const handleAddDataObject = () => {
+  dataModel.push({ value: 0, name: '' })
+}
+
+const handleDataToArray = (val) => {
+  if (val.length) {
+    let newVal = val.split(',')
+    barType.data = newVal.map(Number)
+    console.log(barType.data)
+    barType.data = newVal
+  } else barType.data = []
+}
+const handleDeleteDataObject = (val) => {
+  if (val > 0) dataModel.splice(val, 1)
+}
+
+watch(dataModel, (newValue) => {
+  newValue.forEach((item) => {
+    if (item.value !== 0 && item.name !== '') {
+      barType.data = newValue
+      console.log(newValue)
+    } else {
+      ElMessage({
+        message: '数据项不能为空',
+        type: 'warning'
+      })
+    }
+  })
+})
 watch(
   barType,
+
   (newValue) => {
-    emit('getBarTypeData', { index, newValue })
+    const diffBarType = difference(newValue, baseBarType)
+    emit('getBarTypeData', { index, newValue: diffBarType })
   },
   { deep: true }
 )
-
-const isArray = ref(true)
-const dataModel = reactive({})
 </script>
 
 <style></style>

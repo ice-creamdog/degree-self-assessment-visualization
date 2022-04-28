@@ -25,28 +25,29 @@ const handleClick = (tab, event) => {
 const getAxisData = (e) => {
   if (activeName.value === 'xAxis') {
     xAxisValue = e
-    if (xAxisValue.show) {
-      const data = {
-        key: 'xAxis',
-        newValue: xAxisValue
-      }
-      store.commit('echartsOptions/setOptions', data)
-      console.log(store.state.echartsOptions.options)
-    } else {
-      store.commit('echartsOptions/deleteProp', 'xAxis')
+    // if (xAxisValue.show) {
+    const data = {
+      key: 'xAxis',
+      newValue: xAxisValue
     }
+    store.commit('echartsOptions/setOptions', data)
+    console.log(store.state.echartsOptions.options)
+    // } else {
+    //   store.commit('echartsOptions/deleteProp', 'xAxis')
+    // }
   } else {
     yAxisValue = e
-    if (yAxisValue.show) {
-      const data = {
-        key: 'yAxis',
-        newValue: yAxisValue
-      }
-      store.commit('echartsOptions/setOptions', data)
-      console.log(store.state.echartsOptions.options)
-    } else {
-      store.commit('echartsOptions/deleteProp', 'yAxis')
+    // if (yAxisValue.show) {
+    const data = {
+      key: 'yAxis',
+      newValue: yAxisValue
     }
+
+    store.commit('echartsOptions/setOptions', data)
+    console.log(store.state.echartsOptions.options)
+    // } else {
+    //   store.commit('echartsOptions/deleteProp', 'yAxis')
+    // }
   }
 }
 </script>

@@ -23,7 +23,11 @@ const { options } = toRefs(props)
 watch(
   options.value,
   (newOptions) => {
-    chart.value.setOption(newOptions, true)
+    try {
+      chart.value.setOption(newOptions, true)
+    } catch (error) {
+      console.log(error, 11)
+    }
   },
   {
     deep: true

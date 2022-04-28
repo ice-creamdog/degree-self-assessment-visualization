@@ -10,7 +10,11 @@
           <div class="series-module">
             <el-button @click="handleDeleteSeriesItem(index)">删除该数据块</el-button>
             <el-form-item label="type">
-              <el-select v-model="series[index].type" placeholder="字体样式">
+              <el-select
+                @change="handleSeriesType"
+                v-model="series[index].type"
+                placeholder="字体样式"
+              >
                 <el-option label="bar" value="bar" />
                 <el-option label="line" value="line" />
                 <el-option label="pie" value="pie" />
@@ -107,6 +111,25 @@ const getItemStyle = (e) => {
   console.log(e)
   const { index, newValue } = e
   series[index.value].itemStyle = newValue
+}
+
+const handleSeriesType = (e) => {
+  if (e !== 'pie') {
+    const data = {
+      type: 'category',
+      data: []
+    }
+    const xAxisData = {
+      key: 'xAxis',
+      newValue: data
+    }
+    const yAxisData = {
+      key: 'yAxis',
+      newValue: data
+    }
+    store.commit('echartsOptions/setOptions', xAxisData)
+    store.commit('echartsOptions/setOptions', yAxisData)
+  }
 }
 
 const addSeriesItem = () => {

@@ -1,6 +1,6 @@
 <template>
   <div class="Axis-setting">
-    <el-form :model="Axis" inline="true" size="small">
+    <el-form :model="Axis" inline="true" size="small" v-if="seriesType">
       <el-form-item label="show">
         <el-switch v-model="Axis.show" />
       </el-form-item>
@@ -53,10 +53,12 @@
             </el-select>
           </el-form-item>
           <el-form-item label="symbolSize">
-            <el-input-number v-model="Axis.axisLine.symbolSize" />
+            <el-input-number v-model="Axis.axisLine.symbolSize[0]" />
+            <el-input-number v-model="Axis.axisLine.symbolSize[1]" />
           </el-form-item>
           <el-form-item label="symbolOffset">
-            <el-input-number v-model="Axis.axisLine.symbolOffset" />
+            <el-input-number v-model="Axis.axisLine.symbolOffset[0]" />
+            <el-input-number v-model="Axis.axisLine.symbolOffset[1]" />
           </el-form-item>
           <el-form-item>
             <line-style />
@@ -65,7 +67,13 @@
       </el-form-item>
       <el-form-item label="data">
         <el-form>
-          <el-form-item label="data"></el-form-item>
+          <el-form-item label="data">
+            <el-input
+              v-model="Axis.data"
+              placeholder="请复制数据粘贴"
+              @change="handleDataToArray"
+            ></el-input>
+          </el-form-item>
           <el-form-item label="textStyle">
             <text-basic-style />
           </el-form-item>
@@ -78,8 +86,9 @@
 <script setup>
 import LineStyle from '../lineStyle/index.vue'
 import TextBasicStyle from '../fontStyle/index.vue'
-import { reactive, watch, defineEmits } from 'vue-demi'
+import { reactive, watch, defineEmits, computed, ref } from 'vue-demi'
 import { difference } from '@/utils/commonFun.js'
+import { useStore } from 'vuex'
 const Axis = reactive({
   show: false,
   position: '',
@@ -89,13 +98,11 @@ const Axis = reactive({
   nameTextStyle: {},
   nameGap: 0,
   inverse: false,
-  axisLine: { symbol: 'none', symbolSize: [0, 0], symbolOffset: [0, 0], lineStyle: {} },
+  axisLine: { symbol: '', symbolSize: [0, 0], symbolOffset: [0, 0], lineStyle: {} },
 
-  data: {
-    value: [],
-    textStyle: {}
-  }
+  data: ''
 })
+
 const baseAxis = {
   show: false,
   position: '',
@@ -105,14 +112,36 @@ const baseAxis = {
   nameTextStyle: {},
   nameGap: 0,
   inverse: false,
-  axisLine: { symbol: 'none', symbolSize: [0, 0], symbolOffset: [0, 0], lineStyle: {} },
+  axisLine: { symbol: '', symbolSize: [0, 0], symbolOffset: [0, 0], lineStyle: {} },
 
-  data: {
-    value: [],
-    textStyle: {}
-  }
+  data: ''
 }
 const emit = defineEmits(['getAxisData'])
+const store = useStore()
+
+const handleDataToArray = (val) => {
+  if (val.length) {
+    Axis.data = val.split(',')
+  } else Axis.data = []
+}
+
+let canUseAxis = ref(false)
+
+const seriesType = computed(() => {
+  const options = store.getters['echartsOptions/getOptions']
+  for (let i = 0, len = options.length; i < len; i++) {
+    if (
+      options[i].type !== undefined &&
+      (options[i].type === 'line' || options[i].type === 'bar')
+    ) {
+      console.log(1)
+      canUseAxis.value = true
+      break
+    }
+    console.log(2)
+  }
+  return canUseAxis
+})
 watch(
   Axis,
   (newValue) => {

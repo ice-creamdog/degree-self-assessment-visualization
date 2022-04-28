@@ -21,13 +21,18 @@ const state = () => {
     options: {
       // tooltip: {
       // xAxis: {
-      //   // type: 'category',
-      //   // data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+      //   type: 'category',
+      //   data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
       // },
       // yAxis: {
-      //   // type: 'value'
+      //   type: 'value'
       // },
-      // series: []
+      series: [
+        // {
+        //   data: [150, 230, 224, 218, 135, 147, 260],
+        //   type: 'line'
+        // }
+      ]
       //   trigger: 'item'
       // },
       // series: [
